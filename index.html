@@ -62,33 +62,35 @@
             let codigo = `
                 javascript:(function() {
     function esperarPecera(callback) {
-        let intento = 0;
-        let intervalo = setInterval(function() {
+        let intentos = 0;
+        let intervalo = setInterval(() => {
             let pecera = document.getElementById("aca-drop");
             if (pecera) {
                 clearInterval(intervalo);
                 callback(pecera);
             }
-            intento++;
-            if (intento > 30) { // Si después de 3 segundos no encuentra la pecera, detiene la espera
+            intentos++;
+            if (intentos > 50) { // Si después de 5 segundos no encuentra la pecera, detiene la espera
                 clearInterval(intervalo);
                 console.log("❌ No se encontró la pecera después de esperar.");
             }
-        }, 100); // Verifica cada 100ms
+        }, 100);
     }
 
-    esperarPecera(function(pecera) {
+    esperarPecera((pecera) => {
         console.log("✅ Pecera encontrada. Insertando pez...");
 
-        pecera.style.overflow = "visible"; // Asegurar que el pez sea visible
+        // Si el pez ya existe, no lo agregamos otra vez
+        if (document.getElementById("pez-nadador")) return;
 
         let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        peix.setAttribute("id", "pez-nadador");
         peix.setAttribute("width", "120px");
         peix.setAttribute("height", "60px");
         peix.setAttribute("viewBox", "0 0 200 100");
         peix.style.position = "absolute";
         peix.style.left = "40%";
-        peix.style.top = "62%";
+        peix.style.top = "65%"; // Posición más baja
         peix.style.transform = "translate(-50%, 0%)";
         peix.style.transition = "left 5s linear, top 3s ease-in-out";
         peix.style.zIndex = "9999";
@@ -105,15 +107,16 @@
 
         pecera.appendChild(peix);
 
-        let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
+        let posX = 40, posY = 65, direccionX = 1, direccionY = 1;
+
         function nadar() {
             if (posX >= 75 || posX <= 15) direccionX *= -1;
-            posX += 0.2 * direccionX;
+            posX += 0.3 * direccionX; // Más rápido
             peix.style.left = posX + "%";
             peix.style.transform = `translate(-50%, 0%) scaleX(${direccionX})`;
 
-            if (posY >= 70 || posY <= 55) direccionY *= -1;
-            posY += 0.1 * direccionY;
+            if (posY >= 70 || posY <= 50) direccionY *= -1;
+            posY += 0.2 * direccionY;
             peix.style.top = posY + "%";
 
             requestAnimationFrame(nadar);
