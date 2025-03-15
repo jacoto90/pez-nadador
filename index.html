@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activa el Pez Nadador 🐠</title>
+    <title>🐠 Activa el Pez Nadador</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,16 +26,39 @@
         button:hover {
             background-color: #005fa3;
         }
+        #paso2 {
+            display: none;
+            margin-top: 20px;
+        }
+        #link-aca {
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #ff9900;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #link-aca:hover {
+            background-color: #cc7700;
+        }
     </style>
 </head>
 <body>
     <h1>🐠 Activa el Pez Nadador en la página del ACA</h1>
-    <p>Haz clic en el botón de abajo para ir a la página del ACA y activar el pez nadador.</p>
-    <button onclick="activarPez()">🔵 Ir a la página del ACA</button>
+    <p>Haz clic en el botón para copiar el código y después abre la página del ACA.</p>
+    
+    <button onclick="copiarCodigo()">📋 Copiar Código</button>
+
+    <div id="paso2">
+        <p>✅ Código copiado. Ahora haz clic en el siguiente botón para ir a la página del ACA.</p>
+        <a id="link-aca" href="https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/" target="_blank">🌊 Ir a la Página del ACA</a>
+        <p>Cuando estés en la página, **pega el código en la barra de direcciones** y presiona Enter.</p>
+    </div>
 
     <script>
-        function activarPez() {
-            let urlACA = "https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/";
+        function copiarCodigo() {
             let scriptPez = `(function() {
                 let pecera = document.getElementById("aca-drop");
                 if (!pecera) { console.log("No s'ha trobat la pecera!"); return; }
@@ -72,9 +95,10 @@
                 nadar();
             })();`;
 
-            let urlCompleta = `javascript:${scriptPez}`;
-            window.open(urlACA, "_blank");
-            setTimeout(() => { navigator.clipboard.writeText(urlCompleta); alert("✅ Ahora pega este código en la barra de direcciones cuando estés en la página del ACA."); }, 1000);
+            let codigoJavascript = `javascript:${scriptPez}`;
+            navigator.clipboard.writeText(codigoJavascript).then(() => {
+                document.getElementById("paso2").style.display = "block";
+            });
         }
     </script>
 </body>
