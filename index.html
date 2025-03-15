@@ -32,7 +32,7 @@
     <h1>🐠 Activa el Pez Nadador en la página del ACA</h1>
     <p>Haz clic en el botón para activar el pez automáticamente.</p>
 
-    <button onclick="activarPez()">📋 Activar Pececetoooh e Ir al ACA</button>
+    <button onclick="activarPez()">📋 Activar Pez y Ir al ACA</button>
 
     <script>
         function activarPez() {
@@ -51,6 +51,9 @@
                         setTimeout(insertarPez, 5000);
                         return;
                     }
+
+                    // 🔥 BORRAMOS EL FLAG INMEDIATAMENTE PARA EVITAR LOOP INFINITO
+                    localStorage.removeItem("activar_pez");
 
                     console.log("✅ Pecera encontrada. Insertando pez...");
                     pecera.style.overflow = "visible";
@@ -92,8 +95,6 @@
                         requestAnimationFrame(nadar);
                     }
                     nadar();
-
-                    localStorage.removeItem("activar_pez"); // Para que no se ejecute en futuros reloads
                 }
 
                 insertarPez();
