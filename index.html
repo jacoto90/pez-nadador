@@ -26,108 +26,61 @@
         button:hover {
             background-color: #005fa3;
         }
-        #paso2 {
-            display: none;
-            margin-top: 20px;
-        }
-        #link-aca {
-            font-size: 18px;
-            text-decoration: none;
-            background-color: #ff9900;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        #link-aca:hover {
-            background-color: #cc7700;
-        }
     </style>
 </head>
 <body>
-    <h1>🐠 Activa el Pez Nadador en la página del ACA</h1>
-    <p>Haz clic en el botón para copiar el código y después abre la página del ACA.</p>
+    <h1>🐠 Activa el Pez Nadador Automáticamente</h1>
+    <p>Haz clic en el botón para activar el pez en la página del ACA.</p>
     
-    <button onclick="copiarCodigo()">📋 Copiar Código</button>
-
-    <div id="paso2">
-        <p>✅ Código copiado. Ahora haz clic en el siguiente botón para ir a la página del ACA.</p>
-        <a id="link-aca" href="https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/" target="_blank">🌊 Ir a la Página del ACA</a>
-        <p>Cuando estés en la página, **pega el código en la barra de direcciones** y presiona Enter.</p>
-    </div>
+    <button onclick="activarPez()">🐠 Activar Pez</button>
 
     <script>
-        function copiarCodigo() {
-            let codigo = `javascript:(function() {
-                function esperarPecera(callback) {
-                    let intento = 0;
-                    let intervalo = setInterval(function() {
-                        let pecera = document.getElementById("aca-drop");
-                        if (pecera) {
-                            clearInterval(intervalo);
-                            callback(pecera);
-                        }
-                        intento++;
-                        if (intento > 30) {
-                            clearInterval(intervalo);
-                            console.log("❌ No se encontró la pecera después de esperar.");
-                        }
-                    }, 100);
-                }
+        function activarPez() {
+            // Guarda el código en localStorage para ejecutarlo en ACA
+            localStorage.setItem("activar_pez", "true");
 
-                esperarPecera(function(pecera) {
-                    console.log("✅ Pecera encontrada. Insertando pez...");
-                    pecera.style.overflow = "visible";
+            // Redirige a la página del ACA
+            window.location.href = "https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/";
+        }
 
-                    let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    peix.setAttribute("width", "120px");
-                    peix.setAttribute("height", "60px");
-                    peix.setAttribute("viewBox", "0 0 200 100");
-                    peix.style.position = "absolute";
-                    peix.style.left = "40%";
-                    peix.style.top = "62%";
-                    peix.style.transform = "translate(-50%, 0%)";
-                    peix.style.transition = "left 5s linear, top 3s ease-in-out";
-                    peix.style.zIndex = "9999";
-                    peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
+        function inyectarPez() {
+            if (localStorage.getItem("activar_pez") === "true") {
+                localStorage.removeItem("activar_pez"); // Para que no se repita siempre
 
-                    peix.innerHTML = \`
-                        <g>
-                            <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
-                            <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
-                            <circle cx="40" cy="40" r="5" fill="black"/>
-                            <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
-                        </g>
-                    \`;
+                let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                peix.setAttribute("width", "120px");
+                peix.setAttribute("height", "60px");
+                peix.setAttribute("viewBox", "0 0 200 100");
+                peix.style.position = "absolute";
+                peix.style.left = "40%";
+                peix.style.top = "62%";
+                peix.style.transform = "translate(-50%, 0%)";
+                peix.style.transition = "left 5s linear, top 3s ease-in-out";
+                peix.style.zIndex = "9999";
+                peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
 
+                peix.innerHTML = `
+                    <g>
+                        <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
+                        <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
+                        <circle cx="40" cy="40" r="5" fill="black"/>
+                        <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
+                    </g>
+                `;
+
+                let pecera = document.getElementById("aca-drop");
+                if (pecera) {
                     pecera.appendChild(peix);
+                } else {
+                    console.log("❌ No se encontró la pecera.");
+                }
+            }
+        }
 
-                    let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
-                    function nadar() {
-                        if (posX >= 75 || posX <= 15) direccionX *= -1;
-                        posX += 0.2 * direccionX;
-                        peix.style.left = posX + "%";
-                        peix.style.transform = \`translate(-50%, 0%) scaleX(\${direccionX})\`;
-
-                        if (posY >= 70 || posY <= 55) direccionY *= -1;
-                        posY += 0.1 * direccionY;
-                        peix.style.top = posY + "%";
-
-                        requestAnimationFrame(nadar);
-                    }
-                    nadar();
-                });
-            })();`;
-
-            navigator.clipboard.writeText(codigo).then(() => {
-                document.getElementById("paso2").style.display = "block";
-                alert("✅ Código copiado. Ahora ve a la página del ACA y pégalo en la barra de direcciones.");
-            }).catch(err => {
-                console.error("❌ Error al copiar:", err);
-            });
+        // Si la página cargó en ACA, intenta inyectar el pez
+        if (window.location.href.includes("aca.gencat.cat")) {
+            setTimeout(inyectarPez, 2000); // Espera 2 segundos por si tarda en cargar
         }
     </script>
-
 </body>
 </html>
