@@ -3,63 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pez nadador</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-        #pez {
-            position: absolute;
-            width: 120px;
-            height: 60px;
-            z-index: 9999;
-            filter: drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1);
-            transition: left 5s linear, top 3s ease-in-out;
-        }
-    </style>
+    <title>Pez Nadador</title>
+    <script>
+        // Redirige automáticamente a la página del ACA e inyecta el pez nadador
+        window.location.href = "https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/";
+        
+        setTimeout(function() {
+            (function() {
+                let pecera = document.getElementById("aca-drop");
+                if (!pecera) return console.log("No s'ha trobat la pecera!");
+
+                pecera.style.overflow = "visible";
+
+                let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                peix.setAttribute("width", "120px");
+                peix.setAttribute("height", "60px");
+                peix.setAttribute("viewBox", "0 0 200 100");
+                peix.style.position = "absolute";
+                peix.style.left = "40%";
+                peix.style.top = "62%";
+                peix.style.transform = "translate(-50%, 0%)";
+                peix.style.transition = "left 5s linear, top 3s ease-in-out";
+                peix.style.zIndex = "9999";
+                peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
+
+                peix.innerHTML = `
+                    <g>
+                        <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
+                        <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
+                        <circle cx="40" cy="40" r="5" fill="black"/>
+                        <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
+                    </g>
+                `;
+
+                pecera.appendChild(peix);
+
+                let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
+                function nadar() {
+                    if (posX >= 75 || posX <= 15) direccionX *= -1;
+                    posX += 0.2 * direccionX;
+                    peix.style.left = posX + "%";
+                    peix.style.transform = `translate(-50%, 0%) scaleX(${direccionX})`;
+
+                    if (posY >= 70 || posY <= 55) direccionY *= -1;
+                    posY += 0.1 * direccionY;
+                    peix.style.top = posY + "%";
+
+                    requestAnimationFrame(nadar);
+                }
+                nadar();
+            })();
+        }, 3000); // Espera 3 segundos para cargar la página antes de inyectar el pez
+    </script>
 </head>
 <body>
-
-    <iframe src="https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/"></iframe>
-
-    <svg id="pez" viewBox="0 0 200 100">
-        <g>
-            <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
-            <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
-            <circle cx="40" cy="40" r="5" fill="black"/>
-            <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
-        </g>
-    </svg>
-
-    <script>
-        let pez = document.getElementById("pez");
-        let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
-
-        function nadar() {
-            if (posX >= 75 || posX <= 15) direccionX *= -1;
-            posX += 0.2 * direccionX;
-            pez.style.left = posX + "vw";
-            pez.style.transform = `scaleX(${direccionX})`;
-
-            if (posY >= 70 || posY <= 55) direccionY *= -1;
-            posY += 0.1 * direccionY;
-            pez.style.top = posY + "vh";
-
-            requestAnimationFrame(nadar);
-        }
-
-        nadar();
-    </script>
-
+    <h1>Activando el pez nadador... 🐠</h1>
 </body>
 </html>
