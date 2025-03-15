@@ -59,81 +59,76 @@
 
     <script>
         function copiarCodigo() {
-            let codigo = `
-                javascript:(function() {
-    function esperarPecera(callback) {
-        let intentos = 0;
-        let intervalo = setInterval(() => {
-            let pecera = document.getElementById("aca-drop");
-            if (pecera) {
-                clearInterval(intervalo);
-                callback(pecera);
-            }
-            intentos++;
-            if (intentos > 50) { // Si después de 5 segundos no encuentra la pecera, detiene la espera
-                clearInterval(intervalo);
-                console.log("❌ No se encontró la pecera después de esperar.");
-            }
-        }, 100);
-    }
+            let codigo = `javascript:(function() {
+                function esperarPecera(callback) {
+                    let intento = 0;
+                    let intervalo = setInterval(function() {
+                        let pecera = document.getElementById("aca-drop");
+                        if (pecera) {
+                            clearInterval(intervalo);
+                            callback(pecera);
+                        }
+                        intento++;
+                        if (intento > 30) {
+                            clearInterval(intervalo);
+                            console.log("❌ No se encontró la pecera después de esperar.");
+                        }
+                    }, 100);
+                }
 
-    esperarPecera((pecera) => {
-        console.log("✅ Pecera encontrada. Insertando pez...");
+                esperarPecera(function(pecera) {
+                    console.log("✅ Pecera encontrada. Insertando pez...");
+                    pecera.style.overflow = "visible";
 
-        // Si el pez ya existe, no lo agregamos otra vez
-        if (document.getElementById("pez-nadador")) return;
+                    let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    peix.setAttribute("width", "120px");
+                    peix.setAttribute("height", "60px");
+                    peix.setAttribute("viewBox", "0 0 200 100");
+                    peix.style.position = "absolute";
+                    peix.style.left = "40%";
+                    peix.style.top = "62%";
+                    peix.style.transform = "translate(-50%, 0%)";
+                    peix.style.transition = "left 5s linear, top 3s ease-in-out";
+                    peix.style.zIndex = "9999";
+                    peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
 
-        let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        peix.setAttribute("id", "pez-nadador");
-        peix.setAttribute("width", "120px");
-        peix.setAttribute("height", "60px");
-        peix.setAttribute("viewBox", "0 0 200 100");
-        peix.style.position = "absolute";
-        peix.style.left = "40%";
-        peix.style.top = "65%"; // Posición más baja
-        peix.style.transform = "translate(-50%, 0%)";
-        peix.style.transition = "left 5s linear, top 3s ease-in-out";
-        peix.style.zIndex = "9999";
-        peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
+                    peix.innerHTML = \`
+                        <g>
+                            <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
+                            <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
+                            <circle cx="40" cy="40" r="5" fill="black"/>
+                            <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
+                        </g>
+                    \`;
 
-        peix.innerHTML = `
-            <g>
-                <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
-                <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
-                <circle cx="40" cy="40" r="5" fill="black"/>
-                <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
-            </g>
-        `;
+                    pecera.appendChild(peix);
 
-        pecera.appendChild(peix);
+                    let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
+                    function nadar() {
+                        if (posX >= 75 || posX <= 15) direccionX *= -1;
+                        posX += 0.2 * direccionX;
+                        peix.style.left = posX + "%";
+                        peix.style.transform = \`translate(-50%, 0%) scaleX(\${direccionX})\`;
 
-        let posX = 40, posY = 65, direccionX = 1, direccionY = 1;
+                        if (posY >= 70 || posY <= 55) direccionY *= -1;
+                        posY += 0.1 * direccionY;
+                        peix.style.top = posY + "%";
 
-        function nadar() {
-            if (posX >= 75 || posX <= 15) direccionX *= -1;
-            posX += 0.3 * direccionX; // Más rápido
-            peix.style.left = posX + "%";
-            peix.style.transform = `translate(-50%, 0%) scaleX(${direccionX})`;
+                        requestAnimationFrame(nadar);
+                    }
+                    nadar();
+                });
+            })();`;
 
-            if (posY >= 70 || posY <= 50) direccionY *= -1;
-            posY += 0.2 * direccionY;
-            peix.style.top = posY + "%";
-
-            requestAnimationFrame(nadar);
-        }
-        nadar();
-                    });
-                })();
-            `;
-
-            let textarea = document.createElement("textarea");
-            textarea.value = codigo;
-            document.body.appendChild(textarea);
-            textarea.select();
+            let tempInput = document.createElement("textarea");
+            tempInput.value = codigo;
+            document.body.appendChild(tempInput);
+            tempInput.select();
             document.execCommand("copy");
-            document.body.removeChild(textarea);
+            document.body.removeChild(tempInput);
 
             document.getElementById("paso2").style.display = "block";
+            alert("✅ Código copiado. Ahora ve a la página del ACA y pégalo en la barra de direcciones.");
         }
     </script>
 
