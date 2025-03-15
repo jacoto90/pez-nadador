@@ -43,9 +43,10 @@
         (function() {
             if (localStorage.getItem("activar_pez") === "true") {
                 console.log("🐠 Modo pez activado, esperando la pecera...");
-                
+
                 function insertarPez() {
                     let pecera = document.getElementById("aca-drop");
+
                     if (!pecera) {
                         console.log("❌ Pecera no encontrada, reintentando...");
                         setTimeout(insertarPez, 5000);
@@ -97,7 +98,10 @@
                     nadar();
                 }
 
-                insertarPez();
+                // Inyecta el script dinámicamente en ACA
+                let script = document.createElement("script");
+                script.textContent = `(${insertarPez.toString()})();`;
+                document.documentElement.appendChild(script);
             }
         })();
     </script>
