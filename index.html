@@ -3,16 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pez Nadador</title>
-    <script>
-        // Redirige automáticamente a la página del ACA e inyecta el pez nadador
-        window.location.href = "https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/";
-        
-        setTimeout(function() {
-            (function() {
-                let pecera = document.getElementById("aca-drop");
-                if (!pecera) return console.log("No s'ha trobat la pecera!");
+    <title>Activa el Pez Nadador 🐠</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #0077cc;
+        }
+        button {
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐠 Activa el Pez Nadador en la página del ACA</h1>
+    <p>Haz clic en el botón de abajo para ir a la página del ACA y activar el pez nadador.</p>
+    <button onclick="activarPez()">🔵 Ir a la página del ACA</button>
 
+    <script>
+        function activarPez() {
+            let urlACA = "https://aca.gencat.cat/ca/laigua/estat-del-medi-hidric/recursos-disponibles/estat-de-les-reserves-daigua-als-embassaments/";
+            let scriptPez = `(function() {
+                let pecera = document.getElementById("aca-drop");
+                if (!pecera) { console.log("No s'ha trobat la pecera!"); return; }
                 pecera.style.overflow = "visible";
 
                 let peix = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -27,15 +53,7 @@
                 peix.style.zIndex = "9999";
                 peix.style.filter = "drop-shadow(0px 0px 20px #00bfff) brightness(0.85) contrast(1.1)";
 
-                peix.innerHTML = `
-                    <g>
-                        <ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/>
-                        <polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/>
-                        <circle cx="40" cy="40" r="5" fill="black"/>
-                        <path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/>
-                    </g>
-                `;
-
+                peix.innerHTML = '<g><ellipse cx="60" cy="50" rx="50" ry="30" fill="darkorange" stroke="brown" stroke-width="2"/><polygon points="110,50 150,20 150,80" fill="darkorange" stroke="brown" stroke-width="2"/><circle cx="40" cy="40" r="5" fill="black"/><path d="M20 50 Q30 60 40 50" stroke="black" stroke-width="2" fill="none"/></g>';
                 pecera.appendChild(peix);
 
                 let posX = 40, posY = 62, direccionX = 1, direccionY = 1;
@@ -43,7 +61,7 @@
                     if (posX >= 75 || posX <= 15) direccionX *= -1;
                     posX += 0.2 * direccionX;
                     peix.style.left = posX + "%";
-                    peix.style.transform = `translate(-50%, 0%) scaleX(${direccionX})`;
+                    peix.style.transform = 'translate(-50%, 0%) scaleX('+ direccionX +')';
 
                     if (posY >= 70 || posY <= 55) direccionY *= -1;
                     posY += 0.1 * direccionY;
@@ -52,11 +70,12 @@
                     requestAnimationFrame(nadar);
                 }
                 nadar();
-            })();
-        }, 3000); // Espera 3 segundos para cargar la página antes de inyectar el pez
+            })();`;
+
+            let urlCompleta = `javascript:${scriptPez}`;
+            window.open(urlACA, "_blank");
+            setTimeout(() => { navigator.clipboard.writeText(urlCompleta); alert("✅ Ahora pega este código en la barra de direcciones cuando estés en la página del ACA."); }, 1000);
+        }
     </script>
-</head>
-<body>
-    <h1>Activando el pez nadador... 🐠</h1>
 </body>
 </html>
