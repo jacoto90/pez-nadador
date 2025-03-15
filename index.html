@@ -120,15 +120,12 @@
                 });
             })();`;
 
-            let tempInput = document.createElement("textarea");
-            tempInput.value = codigo;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-
-            document.getElementById("paso2").style.display = "block";
-            alert("✅ Código copiado. Ahora ve a la página del ACA y pégalo en la barra de direcciones.");
+            navigator.clipboard.writeText(codigo).then(() => {
+                document.getElementById("paso2").style.display = "block";
+                alert("✅ Código copiado. Ahora ve a la página del ACA y pégalo en la barra de direcciones.");
+            }).catch(err => {
+                console.error("❌ Error al copiar:", err);
+            });
         }
     </script>
 
